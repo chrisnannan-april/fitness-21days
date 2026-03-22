@@ -141,7 +141,7 @@ const defaultLog = (p) => {
   const sg = getSuggest(p, false);
   return {
     mb:{done:false,cal:p.b.c,note:""}, ml:{done:false,cal:p.l.c,note:""}, mn:{done:false,cal:p.n.c,note:""},
-    sleep:"", commute:{done:false,cal:COMMUTE_DEFAULT},
+    sleep:"", 
     exStr:{done:false,cal:sg.s}, exCardio:{done:false,cal:sg.c}, exWalk:{done:false,cal:sg.w},
     weight:"", late:false, phone:{done:false,time:""}, steps:""
   };
@@ -200,17 +200,17 @@ function App() {
     const lg = getLog(day);
     const intake = (lg.mb.done ? lg.mb.cal : 0) + (lg.ml.done ? lg.ml.cal : 0) + (lg.mn.done ? lg.mn.cal : 0);
     const exBurn = (lg.exStr?.done ? lg.exStr.cal : 0) + (lg.exCardio?.done ? lg.exCardio.cal : 0) + (lg.exWalk?.done ? lg.exWalk.cal : 0);
-    const burn = BASE_TDEE + exBurn + (lg.commute?.done ? lg.commute.cal : 0);
+    const burn = BASE_TDEE + exBurn;
     return burn - intake;
   };
 
-  const getExBurn = (lg) => (lg.exStr?.done ? lg.exStr.cal : 0) + (lg.exCardio?.done ? lg.exCardio.cal : 0) + (lg.exWalk?.done ? lg.exWalk.cal : 0) + (lg.commute?.done ? lg.commute.cal : 0);
+  const getExBurn = (lg) => (lg.exStr?.done ? lg.exStr.cal : 0) + (lg.exCardio?.done ? lg.exCardio.cal : 0) + (lg.exWalk?.done ? lg.exWalk.cal : 0);
 
   const anyExDone = (lg) => lg.exStr?.done || lg.exCardio?.done || lg.exWalk?.done;
 
   const cumDeficit = PLAN.reduce((s, p) => {
     const lg = getLog(p.day);
-    const anyDone = lg.mb.done || lg.ml.done || lg.mn.done || anyExDone(lg) || lg.commute?.done;
+    const anyDone = lg.mb.done || lg.ml.done || lg.mn.done || anyExDone(lg);
     if (!anyDone) return s;
     return s + calcDeficit(p.day);
   }, 0);
@@ -229,7 +229,7 @@ function App() {
   let fStreak = 0;
   for (let i = 0; i < PLAN.length; i++) {
     const lg = getLog(PLAN[i].day);
-    if (lg.mb.done && lg.ml.done && lg.mn.done && (anyExDone(lg) || lg.commute?.done)) fStreak++;
+    if (lg.mb.done && lg.ml.done && lg.mn.done && anyExDone(lg)) fStreak++;
     else break;
   }
 
@@ -443,7 +443,8 @@ function App() {
       <div style={{ display: "flex", gap: 8, marginBottom: 14, overflowX: "auto", paddingBottom: 4, WebkitOverflowScrolling: "touch" }}>
         {MILESTONES.map((m, i) => {
           const done = cumDeficit >= m.t;
-          const pct = Math.min(100, Math.max(0, (cumDeficit / m.t) * 100));
+          const prevT = i > 0 ? MILESTONES[i-1].t : 0;
+          const pct = cumDeficit <= prevT ? 0 : Math.min(100, Math.max(0, ((cumDeficit - prevT) / (m.t - prevT)) * 100));
           return (
             <div key={i} style={{ minWidth: 52, flex: "0 0 auto", textAlign: "center", opacity: done ? 1 : 0.4,
               transition: "all 0.3s", animation: done ? "pulse 0.5s ease" : "none" }}>
@@ -489,7 +490,7 @@ function App() {
           const exLabel = isPeriod ? p.pEx : p.ex;
           const tgtCal = isPeriod ? p.pCal : p.tCal;
           const planIntake = p.b.c + p.l.c + p.n.c;
-          const defTarget = BASE_TDEE + tgtCal + COMMUTE_DEFAULT - planIntake;
+          const defTarget = BASE_TDEE + tgtCal - planIntake;
           const sg = getSuggest(p, isPeriod);
           const deficit = calcDeficit(p.day);
           const allDone = lg.mb.done && lg.ml.done && lg.mn.done && anyExDone(lg);
@@ -535,8 +536,40 @@ function App() {
                 <div style={{ padding: "0 14px 14px", animation: "fadeUp 0.2s ease" }}>
 
                   {/* Tip */}
+                  {/* Daily Summary - at top */}
+                  <div style={{ padding: "10px 12px", borderRadius: 10, marginBottom: 10,
+                    background: "linear-gradient(135deg, #faf5ef, #f5ede3)", border: "1px solid #e8e0d5" }}>
+                    <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 6 }}>📊 今日汇总</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#5a5248", marginBottom: 4 }}>
+                      <span>总消耗: <strong>{BASE_TDEE + getExBurn(lg)}</strong></span>
+                      <span>总摄入: <strong>{(lg.mb.done ? lg.mb.cal : 0) + (lg.ml.done ? lg.ml.cal : 0) + (lg.mn.done ? lg.mn.cal : 0)}</strong></span>
+                      <span>🥩 {p.prot}g</span>
+                      {lg.steps && <span>👟 {lg.steps}步</span>}
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 700,
+                      color: deficit >= 800 ? "#c4553a" : deficit >= 500 ? "#c48a1a" : "#3d7a4a" }}>
+                      今日缺口: {deficit}kcal <span style={{ fontSize: 11, fontWeight: 400, color: "#8a7e72" }}>/ 目标{defTarget}</span>
+                      {defTarget > 0 && <span style={{ fontSize: 11, fontWeight: 600, marginLeft: 6,
+                        color: deficit >= defTarget ? "#3d7a4a" : deficit >= defTarget*0.7 ? "#c48a1a" : "#c4553a" }}>
+                        {Math.round(Math.min(deficit/defTarget*100, 999))}%
+                      </span>}
+                      {deficit >= 1000 && <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 4 }}>⚠️ 偏大</span>}
+                    </div>
+                    {defTarget > 0 && <div style={{ height: 4, borderRadius: 2, background: "#e8e0d5", marginTop: 6, overflow: "hidden" }}>
+                      <div style={{ height: "100%", borderRadius: 2, width: `${Math.min(100, deficit/defTarget*100)}%`,
+                        background: deficit >= defTarget ? t.accent : t.accent2, transition: "width 0.3s" }} />
+                    </div>}
+                  </div>
+
                   <div style={{ fontSize: 11, color: "#7a6e62", padding: "8px 10px", background: "#faf5ef",
-                    borderRadius: 8, marginBottom: 12, fontStyle: "italic" }}>💡 {p.tip}</div>
+                    borderRadius: 8, marginBottom: 12, fontStyle: "italic" }}>
+                    {isPeriod ? "💡 经期注意休息，轻度运动即可，你很棒！" :
+                     p.exT === "str" ? "💪 力量训练日！肌肉在撕裂中重建，越练越强" :
+                     p.exT === "run" ? "🏃‍♀️ 有氧燃脂日！享受跑步的节奏，每一步都在燃烧" :
+                     p.exT === "hiit" ? "⚡ 间歇训练日！短时高效，EPOC让你运动后持续燃脂" :
+                     p.exT === "refeed" ? "⭐ 充能日！碳水拉满恢复瘦素，这不是放纵是策略" :
+                     "🌿 恢复日！身体在休息中变强，享受轻松的一天"}
+                  </div>
 
                   {/* Late Work Toggle (only for exercise days) */}
                   {p.exT !== "rest" && p.exT !== "refeed" && (
@@ -589,7 +622,7 @@ function App() {
                     </div>
                   ))}
 
-                  {/* Exercise Section — 3 lanes + commute */}
+                  {/* Exercise Section — 3 lanes */}
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#4a4038", marginTop: 12, marginBottom: 4 }}>
                     🏋️ 运动消耗 <span style={{ fontWeight: 400, color: "#9a8e82", fontSize: 10 }}>（今日目标 {tgtCal}kcal · {exLabel}）</span>
                   </div>
@@ -603,19 +636,22 @@ function App() {
                     <CalInput val={lg.exCardio?.cal || 0} onChange={v => upLog(p.day, l => ({ ...l, exCardio: { ...l.exCardio, cal: v } }))} />
                     <span style={{ fontSize: 10, color: "#b0a594" }}>kcal</span>
                   </Check>
-                  <Check done={lg.exWalk?.done} label={<span>🚶‍♀️ <strong>走路(运动)</strong> {sg.w > 0 && <span style={{color:"#8a7e72"}}>目标{sg.w}kcal</span>}</span>}
+                  <Check done={lg.exWalk?.done} label={<span>🚶‍♀️ <strong>走路</strong> {sg.w > 0 && <span style={{color:"#8a7e72"}}>目标{sg.w}kcal</span>}</span>}
                     onToggle={() => { upLog(p.day, l => ({ ...l, exWalk: { ...l.exWalk, done: !l.exWalk?.done } })); setTimeout(() => handleAllDone(p.day), 100); }}>
                     <CalInput val={lg.exWalk?.cal || 0} onChange={v => upLog(p.day, l => ({ ...l, exWalk: { ...l.exWalk, cal: v } }))} />
                     <span style={{ fontSize: 10, color: "#b0a594" }}>kcal</span>
                   </Check>
-
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#4a4038", marginTop: 10, marginBottom: 4 }}>
-                    🚶 通勤步行 <span style={{ fontWeight: 400, color: "#9a8e82", fontSize: 10 }}>（上下班 默认{COMMUTE_DEFAULT}kcal）</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 0 8px 36px", borderBottom: "1px solid #e5e5ea" }}>
+                    <span style={{ fontSize: 12, color: "#8a7e72" }}>👟 步数</span>
+                    <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="8000+" defaultValue={lg.steps}
+                      onFocus={e => e.target.select()}
+                      onBlur={e => upLog(p.day, l => ({ ...l, steps: e.target.value }))}
+                      style={{ width: 80, padding: "4px 8px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13, background: "#faf8f5" }} />
+                    {lg.steps && Number(lg.steps) >= 8000 && <span style={{ fontSize: 10, color: "#3d7a4a", fontWeight: 500 }}>✓ 达标</span>}
+                    {lg.steps && Number(lg.steps) > 0 && Number(lg.steps) < 8000 && <span style={{ fontSize: 10, color: "#c48a1a" }}>差{8000 - Number(lg.steps)}步</span>}
                   </div>
-                  <Check done={lg.commute?.done} label={<span>👟 <strong>上下班步行</strong> <span style={{color:"#8a7e72"}}>~25min×2</span></span>}
-                    onToggle={() => upLog(p.day, l => ({ ...l, commute: { ...l.commute, done: !l.commute?.done } }))}>
-                    <CalInput val={lg.commute?.cal || COMMUTE_DEFAULT} onChange={v => upLog(p.day, l => ({ ...l, commute: { ...l.commute, cal: v } }))} w={50} />
-                  </Check>
+
+
 
                   {/* Sleep */}
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#4a4038", marginTop: 12, marginBottom: 6 }}>
@@ -658,12 +694,7 @@ function App() {
                           </div>
                         )}
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <span style={{ fontSize: 10, color: "#9a8e82" }}>放下时间</span>
-                        <input type="time" defaultValue={lg.phone?.time || ""}
-                          onBlur={e => upLog(p.day, l => ({ ...l, phone: { ...l.phone, time: e.target.value } }))}
-                          style={{ padding: "3px 6px", borderRadius: 6, border: "1px solid #d8d0c6", fontSize: 11, background: "#faf8f5", width: 80 }} />
-                      </div>
+
                     </div>
                     {!lg.phone?.done && (
                       <div style={{ marginTop: 6, fontSize: 10, color: "#8a72a8", lineHeight: 1.5, fontStyle: "italic" }}>
@@ -672,45 +703,11 @@ function App() {
                     )}
                   </div>
 
-                  {/* Weight */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
-                    <span style={{ fontSize: 12 }}>⚖️ 体重</span>
-                    <input type="text" inputMode="decimal" placeholder="kg" defaultValue={lg.weight}
-                      onFocus={e => e.target.select()}
-                      onBlur={e => upLog(p.day, l => ({ ...l, weight: e.target.value }))}
-                      style={{ width: 70, padding: "4px 8px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13, background: "#faf8f5" }} />
-                    {lg.weight && <span style={{ fontSize: 11, color: "#3d7a4a" }}>✓</span>}
-                  </div>
 
-                  {/* Steps */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
-                    <span style={{ fontSize: 12 }}>👟 步数</span>
-                    <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="目标8000+" defaultValue={lg.steps}
-                      onFocus={e => e.target.select()}
-                      onBlur={e => upLog(p.day, l => ({ ...l, steps: e.target.value }))}
-                      style={{ width: 90, padding: "4px 8px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13, background: "#faf8f5" }} />
-                    {lg.steps && Number(lg.steps) >= 8000 && <span style={{ fontSize: 11, color: "#3d7a4a", fontWeight: 500 }}>✓ 达标！</span>}
-                    {lg.steps && Number(lg.steps) > 0 && Number(lg.steps) < 8000 && <span style={{ fontSize: 10, color: "#c48a1a" }}>再走{8000 - Number(lg.steps)}步</span>}
-                  </div>
 
-                  {/* Daily Summary */}
-                  <div style={{ marginTop: 14, padding: "10px 12px", borderRadius: 10,
-                    background: "linear-gradient(135deg, #faf5ef, #f5ede3)", border: "1px solid #e8e0d5" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 6 }}>📊 今日汇总</div>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 12px", fontSize: 11, color: "#5a5248" }}>
-                      <span>基础消耗: {BASE_TDEE}</span>
-                      <span>额外运动: +{getExBurn(lg)}</span>
-                      <span>总消耗: <strong>{BASE_TDEE + getExBurn(lg)}</strong></span>
-                      <span>总摄入: <strong>{(lg.mb.done ? lg.mb.cal : 0) + (lg.ml.done ? lg.ml.cal : 0) + (lg.mn.done ? lg.mn.cal : 0)}</strong></span>
-                      <span>🥩 目标蛋白: {p.prot}g</span>
-                      <span>👟 步数: {lg.steps || "—"}{lg.steps && Number(lg.steps) >= 8000 ? " ✓" : ""}</span>
-                    </div>
-                    <div style={{ marginTop: 6, fontSize: 14, fontWeight: 700,
-                      color: deficit >= 800 ? "#c4553a" : deficit >= 500 ? "#c48a1a" : "#3d7a4a" }}>
-                      今日缺口: {deficit} kcal / 目标{defTarget}
-                      {deficit >= 1000 && <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 6 }}>⚠️ 缺口偏大注意身体</span>}
-                    </div>
-                  </div>
+
+
+
                 </div>
               )}
             </div>
@@ -718,35 +715,78 @@ function App() {
         })}
       </div>
 
-      {/* Weight Trend */}
+      {/* Combined Deficit Chart */}
       {(() => {
-        const wData = PLAN.map(p => ({ day: p.day, date: p.date, w: getLog(p.day).weight })).filter(x => x.w);
-        if (wData.length < 2) return null;
-        const vals = wData.map(x => Number(x.w));
-        const min = Math.min(...vals) - 0.3, max = Math.max(...vals) + 0.3, range = max - min || 1;
+        let cum = 0;
+        const chartData = [];
+        PLAN.forEach(p => {
+          const lg = getLog(p.day);
+          const anyD = lg.mb.done || lg.ml.done || lg.mn.done || anyExDone(lg);
+          if (!anyD) return;
+          const d = calcDeficit(p.day);
+          const planIntake = p.b.c + p.l.c + p.n.c;
+          const tgt = BASE_TDEE + (period ? p.pCal : p.tCal) - planIntake;
+          cum += d;
+          chartData.push({ day: p.day, date: p.date, deficit: d, cum, target: tgt, hit: d >= tgt });
+        });
+        if (chartData.length < 1) return null;
+        const maxDef = Math.max(...chartData.map(x => x.deficit), 1000);
+        const maxCum = Math.max(...chartData.map(x => x.cum), 7700);
+        const chartH = 100;
         return (
           <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: 16, background: t.cardBg,
             boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>⚖️ 体重趋势</div>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 70 }}>
-              {wData.map((x, i) => {
-                const h = ((Number(x.w) - min) / range) * 55 + 10;
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+              <span style={{ fontSize: 12, fontWeight: 700 }}>📊 热量缺口追踪</span>
+              <span style={{ fontSize: 10, color: "#8a7e72" }}>
+                累计 {(cum/1000).toFixed(1)}千卡 ≈ {(cum/7700).toFixed(2)}kg
+              </span>
+            </div>
+            <div style={{ position: "relative", height: chartH + 20, display: "flex", alignItems: "flex-end", gap: 2 }}>
+              {/* Bars + line dots */}
+              {chartData.map((x, i) => {
+                const barH = Math.max(4, (x.deficit / maxDef) * (chartH * 0.75));
+                const lineY = chartH - (x.cum / maxCum) * (chartH * 0.9);
+                const prevLineY = i > 0 ? chartH - (chartData[i-1].cum / maxCum) * (chartH * 0.9) : lineY;
                 return (
-                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
-                    <div style={{ fontSize: 8, color: "#7a6e62", marginBottom: 2 }}>{x.w}</div>
-                    <div style={{ width: "80%", maxWidth: 18, height: h, borderRadius: 3,
-                      background: t.barGrad }} />
-                    <div style={{ fontSize: 7, color: "#b0a594", marginTop: 2 }}>D{x.day}</div>
+                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative", height: chartH + 20 }}>
+                    {/* Success indicator */}
+                    {x.hit && <div style={{ position: "absolute", top: chartH - barH - 16, fontSize: 8, color: "#3d7a4a", fontWeight: 700 }}>✓</div>}
+                    {/* Bar */}
+                    <div style={{ position: "absolute", bottom: 14, width: "65%", maxWidth: 22, height: barH, borderRadius: 3,
+                      background: x.hit ? t.accent : "#d4ccc2", opacity: x.hit ? 0.85 : 0.5 }} />
+                    {/* Line segment to next point */}
+                    {i < chartData.length - 1 && (() => {
+                      const nextLineY = chartH - (chartData[i+1].cum / maxCum) * (chartH * 0.9);
+                      const colW = 480 / Math.max(chartData.length, 1);
+                      const dx = colW;
+                      const dy = nextLineY - lineY;
+                      const len = Math.sqrt(dx*dx + dy*dy);
+                      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                      return <div style={{ position: "absolute", top: lineY, left: "50%", width: len, height: 2,
+                        background: t.accent2, borderRadius: 1, transformOrigin: "0 50%",
+                        transform: `rotate(${angle}deg)`, opacity: 0.6, zIndex: 2 }} />;
+                    })()}
+                    {/* Line dot */}
+                    <div style={{ position: "absolute", top: lineY - 3, width: 6, height: 6, borderRadius: "50%",
+                      background: t.accent2, border: "1.5px solid #fff", zIndex: 3 }} />
+                    {/* Cumulative label on top */}
+                    <div style={{ position: "absolute", top: Math.max(0, lineY - 14), fontSize: 6, color: t.accent2, fontWeight: 600 }}>
+                      {(x.cum/1000).toFixed(1)}k
+                    </div>
+                    {/* Day label */}
+                    <div style={{ position: "absolute", bottom: 2, fontSize: 7, color: "#b0a594" }}>D{x.day}</div>
+                    {/* Bar value */}
+                    <div style={{ position: "absolute", bottom: barH + 16, fontSize: 7, color: "#8a7e72" }}>{x.deficit}</div>
                   </div>
                 );
               })}
             </div>
-            {vals.length >= 2 && (
-              <div style={{ fontSize: 11, color: "#7a6e62", marginTop: 8, textAlign: "center" }}>
-                {vals[0]} → {vals[vals.length - 1]} kg
-                （{(vals[vals.length - 1] - vals[0] > 0 ? "+" : "")}{(vals[vals.length - 1] - vals[0]).toFixed(1)}）
-              </div>
-            )}
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 4, fontSize: 9, color: "#8a7e72" }}>
+              <span><span style={{ display: "inline-block", width: 10, height: 8, borderRadius: 2, background: t.accent, opacity: 0.85, verticalAlign: "middle", marginRight: 3 }}/>每日缺口</span>
+              <span><span style={{ display: "inline-block", width: 10, height: 2, borderRadius: 1, background: t.accent2, verticalAlign: "middle", marginRight: 3 }}/>累计缺口</span>
+              <span style={{ color: "#3d7a4a" }}>✓ 达标</span>
+            </div>
           </div>
         );
       })()}
