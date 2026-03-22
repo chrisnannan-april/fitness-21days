@@ -270,8 +270,10 @@ function App() {
 
   // Calorie input component
   const CalInput = ({ val, onChange, w = 60 }) => (
-    <input type="number" value={val} onChange={e => onChange(Number(e.target.value) || 0)}
-      style={{ width: w, padding: "4px 6px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13,
+    <input type="text" inputMode="numeric" pattern="[0-9]*" value={val}
+      onFocus={e => e.target.select()}
+      onChange={e => { const v = e.target.value.replace(/[^0-9]/g, ""); onChange(Number(v) || 0); }}
+      style={{ width: w, padding: "5px 6px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 14,
         textAlign: "center", background: "#faf8f5", outline: "none", fontFamily: "inherit" }}
     />
   );
@@ -482,6 +484,8 @@ function App() {
           const isPeriod = period && p.exT !== "rest";
           const exLabel = isPeriod ? p.pEx : p.ex;
           const tgtCal = isPeriod ? p.pCal : p.tCal;
+          const planIntake = p.b.c + p.l.c + p.n.c;
+          const defTarget = BASE_TDEE + tgtCal + COMMUTE_DEFAULT - planIntake;
           const sg = getSuggest(p, isPeriod);
           const deficit = calcDeficit(p.day);
           const allDone = lg.mb.done && lg.ml.done && lg.mn.done && anyExDone(lg);
@@ -513,6 +517,7 @@ function App() {
                   <div style={{ display: "flex", gap: 10, marginTop: 3, fontSize: 10, color: "#8a7e72", flexWrap: "wrap" }}>
                     <span>🎯 目标{tgtCal}kcal</span>
                     <span>🥩 蛋白{p.prot}g</span>
+                    <span style={{ color: t.accent, fontWeight: 500 }}>📉 目标缺口{defTarget}kcal</span>
                     {(anyExDone(lg) || lg.mb.done) && <span style={{ color: deficit > 0 ? "#c4553a" : "#3d7a4a", fontWeight: 600 }}>
                       📉 缺口{deficit}kcal
                     </span>}
@@ -666,7 +671,8 @@ function App() {
                   {/* Weight */}
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
                     <span style={{ fontSize: 12 }}>⚖️ 体重</span>
-                    <input type="number" step="0.1" placeholder="kg" value={lg.weight}
+                    <input type="text" inputMode="decimal" placeholder="kg" value={lg.weight}
+                      onFocus={e => e.target.select()}
                       onChange={e => upLog(p.day, l => ({ ...l, weight: e.target.value }))}
                       style={{ width: 70, padding: "4px 8px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13, background: "#faf8f5" }} />
                     {lg.weight && <span style={{ fontSize: 11, color: "#3d7a4a" }}>✓</span>}
@@ -675,7 +681,8 @@ function App() {
                   {/* Steps */}
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8 }}>
                     <span style={{ fontSize: 12 }}>👟 步数</span>
-                    <input type="number" placeholder="目标8000+" value={lg.steps}
+                    <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="目标8000+" value={lg.steps}
+                      onFocus={e => e.target.select()}
                       onChange={e => upLog(p.day, l => ({ ...l, steps: e.target.value }))}
                       style={{ width: 90, padding: "4px 8px", borderRadius: 8, border: "1px solid #d8d0c6", fontSize: 13, background: "#faf8f5" }} />
                     {lg.steps && Number(lg.steps) >= 8000 && <span style={{ fontSize: 11, color: "#3d7a4a", fontWeight: 500 }}>✓ 达标！</span>}
@@ -696,7 +703,7 @@ function App() {
                     </div>
                     <div style={{ marginTop: 6, fontSize: 14, fontWeight: 700,
                       color: deficit >= 800 ? "#c4553a" : deficit >= 500 ? "#c48a1a" : "#3d7a4a" }}>
-                      今日缺口: {deficit} kcal
+                      今日缺口: {deficit} kcal / 目标{defTarget}
                       {deficit >= 1000 && <span style={{ fontSize: 10, fontWeight: 400, marginLeft: 6 }}>⚠️ 缺口偏大注意身体</span>}
                     </div>
                   </div>
