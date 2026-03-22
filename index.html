@@ -1,39 +1,11 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="21Days"/>
-<meta name="theme-color" content="#2a2520"/>
-<link rel="manifest" href="./manifest.json"/>
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232a2520'/><text x='50' y='55' font-size='40' text-anchor='middle' dominant-baseline='middle' fill='white' font-family='serif'>21</text><text x='50' y='82' font-size='14' text-anchor='middle' fill='%235cb270' font-family='sans-serif'>DAYS</text></svg>"/>
-<title>三周蜕变计划 · 21 Days</title>
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="21Days"/><meta name="theme-color" content="#2a2520"/>
+<link rel="manifest" href="./manifest.json"/><link rel="apple-touch-icon" href="./apple-touch-icon.png"/>
+<title>三周蜕变计划</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Serif+Display:wght@400;700&display=swap" rel="stylesheet"/>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{overscroll-behavior:none}
-:root{--bg:#f7f3ee;--bg2:#efe9e0;--bg3:#e8e0d5;--card:#fff;--text:#2a2520;--sub:#4a4038;--muted:#8a7e72;--faint:#9a8e82;--border:#e8e0d5;--border2:#d8d0c6;--green:#3d7a4a;--green2:#5cb270;--red:#c4553a;--purple:#5b5fc7;--orange:#c48a1a;--gold:#c4a86a}
-body{background:linear-gradient(170deg,var(--bg) 0%,var(--bg2) 50%,var(--bg3) 100%);font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;color:var(--text);min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 14px 14px;max-width:480px;margin:0 auto;-webkit-tap-highlight-color:transparent}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#c8bfb4;border-radius:4px}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@keyframes toastIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-.card{transition:all .2s ease;cursor:pointer}.card:hover{transform:translateY(-2px)}
-.tab{transition:all .15s ease;cursor:pointer;border:none}.tab:hover{transform:translateY(-1px)}
-input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
-input[type=number]{-moz-appearance:textfield}
-.check-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0ebe4}
-.check-btn{width:28px;height:28px;border-radius:8px;border:none;font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.check-btn.done{background:var(--green);color:#fff}.check-btn.undone{background:#ede8e2;color:#b0a594}
-.cal-input{width:60px;padding:4px 6px;border-radius:8px;border:1px solid var(--border2);font-size:13px;text-align:center;background:#faf8f5;outline:none;font-family:inherit}
-.cal-sm{width:50px}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2a2520,#3d3530);color:#fff;padding:14px 24px;border-radius:16px;font-size:14px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease;z-index:100;max-width:85vw;text-align:center}
-</style>
-</head>
-<body>
-<div id="app"></div>
+<style>*{box-sizing:border-box;margin:0;padding:0}html,body{overscroll-behavior:none}body{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;color:#2a2520;min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 14px 14px;max-width:480px;margin:0 auto;-webkit-tap-highlight-color:transparent}::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#c8bfb4;border-radius:4px}@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes toastIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}.card{transition:all .2s ease;cursor:pointer}.card:hover{transform:translateY(-2px)}.tab{transition:all .15s ease;cursor:pointer;border:none}.tab:hover{transform:translateY(-1px)}input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}input[type=number]{-moz-appearance:textfield}.cal-input{width:60px;padding:4px 6px;border-radius:8px;border:1px solid #d8d0c6;font-size:13px;text-align:center;background:#faf8f5;outline:none;font-family:inherit}.cal-sm{width:50px}.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2a2520,#3d3530);color:#fff;padding:14px 24px;border-radius:16px;font-size:14px;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.25);animation:toastIn .3s ease;z-index:100;max-width:85vw;text-align:center}</style></head><body><div id="app"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
@@ -154,6 +126,7 @@ const MILESTONES = [
   { t:7700, l:"1kg", e:"🏆", m:"一公斤脂肪消灭！大里程碑！" },
   { t:11550, l:"1.5kg", e:"⭐", m:"一公斤半！你太强了！" },
   { t:15400, l:"2kg", e:"👑", m:"两公斤达成！蜕变完成！" },
+  { t:23100, l:"3kg", e:"🌟", m:"三公斤！你是传奇！" },
 ];
 
 const TYPE_COLORS = {
@@ -320,9 +293,77 @@ function App() {
 
   if (!loaded) return <div style={{ padding: 40, textAlign: "center", color: "#8a7e72" }}>加载中...</div>;
 
+  // Weekly themes - clean elegant style with subtle decorations
+  const themes = [
+    { // Week 1: Paris romantic - lavender & rose
+      bg: "linear-gradient(170deg, #eee5f5 0%, #f5eaf0 40%, #f8f0ed 70%, #f3e8f2 100%)",
+      overlay: [
+        {pos:"15% 12%", size:"55% 40%", color:"rgba(248,175,205,0.45)"},
+        {pos:"82% 15%", size:"50% 35%", color:"rgba(242,168,198,0.40)"},
+        {pos:"50% 5%", size:"70% 25%", color:"rgba(185,210,248,0.35)"},
+        {pos:"25% 50%", size:"45% 30%", color:"rgba(252,195,218,0.25)"},
+        {pos:"70% 55%", size:"40% 25%", color:"rgba(215,190,242,0.22)"},
+        {pos:"50% 85%", size:"60% 30%", color:"rgba(245,215,228,0.20)"},
+      ],
+      accent: "#9b72b0", accent2: "#c88da0", cardBg: "rgba(255,255,255,0.97)",
+      tabActive: "linear-gradient(135deg, #7b5695, #9b72b0)", tabText: "#7b5695",
+      memoGrad: "linear-gradient(135deg, #6a4580, #8b62a5)",
+      statColors: ["#9b72b0", "#c88da0", "#7b98b8"],
+      progressGrad: "linear-gradient(90deg, #9b72b0, #c88da0)",
+      streakBg: "linear-gradient(90deg, #f8f0f5, #f5eaf0)",
+      barGrad: "linear-gradient(180deg, #9b72b0, #c88da0)",
+    },
+    { // Week 2: Florence elegant - ochre & sage
+      bg: "linear-gradient(170deg, #f5f0e5 0%, #f2ebe0 40%, #f5ede5 70%, #f0e8dd 100%)",
+      overlay: [
+        {pos:"50% 8%", size:"80% 35%", color:"rgba(228,195,130,0.42)"},
+        {pos:"18% 22%", size:"50% 30%", color:"rgba(205,178,135,0.35)"},
+        {pos:"82% 22%", size:"50% 30%", color:"rgba(205,178,135,0.32)"},
+        {pos:"35% 55%", size:"40% 22%", color:"rgba(150,192,125,0.25)"},
+        {pos:"65% 70%", size:"45% 25%", color:"rgba(228,205,148,0.22)"},
+        {pos:"50% 90%", size:"60% 25%", color:"rgba(215,195,155,0.18)"},
+      ],
+      accent: "#b58040", accent2: "#7a9468", cardBg: "rgba(255,253,248,0.97)",
+      tabActive: "linear-gradient(135deg, #956828, #b58040)", tabText: "#8a6520",
+      memoGrad: "linear-gradient(135deg, #6a5030, #8a6a40)",
+      statColors: ["#b58040", "#7a9468", "#8a7498"],
+      progressGrad: "linear-gradient(90deg, #b58040, #7a9468)",
+      streakBg: "linear-gradient(90deg, #f8f2e8, #f5ede2)",
+      barGrad: "linear-gradient(180deg, #b58040, #7a9468)",
+    },
+    { // Week 3: California sunshine - coral & ocean
+      bg: "linear-gradient(170deg, #fdf0e5 0%, #faeadf 25%, #eef2f8 55%, #e8eef5 100%)",
+      overlay: [
+        {pos:"50% 3%", size:"90% 25%", color:"rgba(252,178,95,0.48)"},
+        {pos:"50% 0%", size:"70% 15%", color:"rgba(255,215,140,0.40)"},
+        {pos:"50% 32%", size:"110% 12%", color:"rgba(110,188,235,0.35)"},
+        {pos:"22% 12%", size:"45% 20%", color:"rgba(255,168,95,0.30)"},
+        {pos:"78% 10%", size:"45% 18%", color:"rgba(255,188,115,0.28)"},
+        {pos:"50% 80%", size:"60% 20%", color:"rgba(248,228,195,0.18)"},
+      ],
+      accent: "#e07838", accent2: "#3898c0", cardBg: "rgba(255,255,255,0.97)",
+      tabActive: "linear-gradient(135deg, #c86020, #e07838)", tabText: "#c06020",
+      memoGrad: "linear-gradient(135deg, #b85020, #d87030)",
+      statColors: ["#e07838", "#3898c0", "#48a878"],
+      progressGrad: "linear-gradient(90deg, #e07838, #3898c0)",
+      streakBg: "linear-gradient(90deg, #fef5ec, #f8f0ea)",
+      barGrad: "linear-gradient(180deg, #e07838, #3898c0)",
+    }
+  ];
+  const t = themes[week];
+
   return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(170deg, #f7f3ee 0%, #efe9e0 50%, #e8e0d5 100%)",
-      fontFamily: "'Noto Sans SC', 'PingFang SC', sans-serif", padding: "16px 14px", color: "#2a2520", maxWidth: 480, margin: "0 auto" }}>
+    <div style={{ minHeight: "100vh", background: t.bg, position: "relative", overflow: "hidden", transition: "background 0.5s ease",
+      fontFamily: "'Noto Sans SC', 'PingFang SC', sans-serif", padding: "16px 14px", color: "#2a2520", maxWidth: 480, margin: "0 auto",
+      transition: "background 0.6s ease" }}>
+
+      {/* Atmospheric light overlays */}
+      {t.overlay && t.overlay.map((o, i) => (
+        <div key={i} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%",
+          pointerEvents: "none", zIndex: 0,
+          background: `radial-gradient(ellipse ${o.size} at ${o.pos}, ${o.color} 0%, transparent 70%)` }} />
+      ))}
+      <div style={{ position: "relative", zIndex: 1 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=DM+Serif+Display&display=swap');
         *{box-sizing:border-box;margin:0;padding:0}
@@ -343,13 +384,14 @@ function App() {
         <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: 28, color: "#2a2520", letterSpacing: -0.5 }}>
           21 Days
         </div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "#3d7a4a", marginBottom: 2 }}>三周蜕变计划</div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: t.accent, marginBottom: 2 }}>三周蜕变计划</div>
         <div style={{ fontSize: 11, color: "#9a8e82" }}>3月22日 → 4月11日 · BMR 1250 · TDEE 1550 · 蛋白≥90g</div>
+
       </div>
 
       {/* Period Mode Toggle */}
       <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 14,
-        padding: "8px 16px", borderRadius: 12, background: period ? "#fce4ec" : "#f5f0eb" }}>
+        padding: "8px 16px", borderRadius: 12, background: period ? "rgba(252,228,236,0.7)" : "transparent" }}>
         <span style={{ fontSize: 12, color: period ? "#c62828" : "#8a7e72" }}>
           {period ? "🩸 经期模式已开启 · 运动自动降级" : "经期模式"}
         </span>
@@ -363,12 +405,12 @@ function App() {
       {/* Stats */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
         {[
-          { lb: "完成天数", v: `${completedDays}/21`, c: "#3d7a4a" },
-          { lb: "累计缺口", v: `${(cumDeficit/1000).toFixed(1)}千卡`, c: "#c4553a" },
-          { lb: "预估减脂", v: `${fatLoss}kg`, c: "#5b5fc7" },
+          { lb: "完成天数", v: `${completedDays}/21`, c: t.statColors[0] },
+          { lb: "累计缺口", v: `${(cumDeficit/1000).toFixed(1)}千卡`, c: t.statColors[1] },
+          { lb: "预估减脂", v: `${fatLoss}kg`, c: t.statColors[2] },
         ].map((s, i) => (
-          <div key={i} style={{ flex: 1, background: "#fff", borderRadius: 14, padding: "12px 8px",
-            textAlign: "center", boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}>
+          <div key={i} style={{ flex: 1, background: t.cardBg, borderRadius: 14, padding: "12px 8px",
+            textAlign: "center", boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ fontSize: 10, color: "#9a8e82", marginBottom: 3 }}>{s.lb}</div>
             <div style={{ fontSize: 17, fontWeight: 700, color: s.c }}>{s.v}</div>
           </div>
@@ -378,32 +420,32 @@ function App() {
       {/* Streak */}
       {fStreak > 0 && (
         <div style={{ textAlign: "center", marginBottom: phoneStreak >= 3 ? 6 : 12, padding: "6px 14px", borderRadius: 10,
-          background: "linear-gradient(90deg, #fff8e6, #fef3e0)", fontSize: 13, fontWeight: 500, color: "#8b6914",
+          background: "linear-gradient(90deg, #fff8e6, #fef3e0)", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", fontSize: 13, fontWeight: 500, color: "#8b6914",
           animation: "fadeUp 0.3s ease" }}>
           {streakMsg}
         </div>
       )}
       {phoneStreak >= 3 && (
         <div style={{ textAlign: "center", marginBottom: 12, padding: "6px 14px", borderRadius: 10,
-          background: "linear-gradient(90deg, #f3eafc, #ece0f8)", fontSize: 12, fontWeight: 500, color: "#6b4d8a",
+          background: "linear-gradient(90deg, #f3eafc, #ece0f8)", boxShadow: "0 1px 4px rgba(0,0,0,0.05)", fontSize: 12, fontWeight: 500, color: "#6b4d8a",
           animation: "fadeUp 0.35s ease" }}>
           {phoneStreakMsg}
         </div>
       )}
 
       {/* Milestones */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 14, overflowX: "auto", paddingBottom: 4 }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 14, overflowX: "auto", paddingBottom: 4, WebkitOverflowScrolling: "touch" }}>
         {MILESTONES.map((m, i) => {
           const done = cumDeficit >= m.t;
-          const pct = Math.min(100, (cumDeficit / m.t) * 100);
+          const pct = Math.min(100, Math.max(0, (cumDeficit / m.t) * 100));
           return (
-            <div key={i} style={{ minWidth: 56, textAlign: "center", opacity: done ? 1 : 0.45,
+            <div key={i} style={{ minWidth: 52, flex: "0 0 auto", textAlign: "center", opacity: done ? 1 : 0.4,
               transition: "all 0.3s", animation: done ? "pulse 0.5s ease" : "none" }}>
               <div style={{ fontSize: 20, marginBottom: 2 }}>{m.e}</div>
               <div style={{ fontSize: 9, color: "#6b6056", fontWeight: 500 }}>{m.l}</div>
-              <div style={{ height: 3, borderRadius: 2, background: "#e8e0d5", marginTop: 3 }}>
-                <div style={{ height: "100%", borderRadius: 2, width: `${pct}%`,
-                  background: done ? "#3d7a4a" : "#c4a86a", transition: "width 0.5s" }} />
+              <div style={{ height: 4, borderRadius: 2, background: "#e8e2da", marginTop: 4, overflow: "hidden" }}>
+                {pct > 0 && <div style={{ height: "100%", borderRadius: 2, width: `${pct}%`,
+                  background: done ? t.accent : t.accent2, transition: "width 0.5s" }} />}
               </div>
             </div>
           );
@@ -415,9 +457,9 @@ function App() {
         {["第一周·启动", "第二周·强化", "第三周·突破"].map((lb, i) => (
           <button key={i} className="tab" onClick={() => { setWeek(i); setSel(null); }}
             style={{ flex: 1, padding: "9px 6px", borderRadius: 12, fontSize: 12,
-              fontWeight: week === i ? 700 : 400, color: week === i ? "#fff" : "#6b6056",
-              background: week === i ? "linear-gradient(135deg, #2a2520, #3d3530)" : "#fff",
-              boxShadow: week === i ? "0 3px 12px rgba(42,37,32,0.2)" : "0 1px 6px rgba(0,0,0,0.04)" }}>
+              fontWeight: week === i ? 700 : 400, color: week === i ? "#fff" : t.tabText,
+              background: week === i ? themes[i].tabActive : t.cardBg,
+              boxShadow: week === i ? `0 3px 12px ${themes[i].tabShadow}` : "0 1px 6px rgba(0,0,0,0.04)" }}>
             {lb}
           </button>
         ))}
@@ -427,7 +469,7 @@ function App() {
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
         <div style={{ flex: 1, background: "#e8e0d5", borderRadius: 6, height: 5, overflow: "hidden" }}>
           <div style={{ height: "100%", width: `${(weekComp / 7) * 100}%`,
-            background: "linear-gradient(90deg, #3d7a4a, #5cb270)", borderRadius: 6, transition: "width 0.4s" }} />
+            background: t.progressGrad, borderRadius: 6, transition: "width 0.4s" }} />
         </div>
         <span style={{ fontSize: 11, color: "#9a8e82", whiteSpace: "nowrap" }}>{weekComp}/7</span>
       </div>
@@ -446,7 +488,7 @@ function App() {
           const expanded = sel === p.day;
 
           return (
-            <div key={p.day} className="card" style={{ background: allDone ? "#f2faf4" : "#fff", borderRadius: 16,
+            <div key={p.day} className="card" style={{ background: allDone ? `${t.cardBg}` : t.cardBg, borderRadius: 16,
               boxShadow: "0 2px 10px rgba(0,0,0,0.04)", borderLeft: `4px solid ${allDone ? "#3d7a4a" : tc.c}`,
               overflow: "hidden", animation: `fadeUp ${0.15 + i * 0.04}s ease` }}>
 
@@ -672,8 +714,8 @@ function App() {
         const vals = wData.map(x => Number(x.w));
         const min = Math.min(...vals) - 0.3, max = Math.max(...vals) + 0.3, range = max - min || 1;
         return (
-          <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: 16, background: "#fff",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}>
+          <div style={{ marginTop: 16, padding: "14px 16px", borderRadius: 16, background: t.cardBg,
+            boxShadow: "0 1px 8px rgba(0,0,0,0.04)" }}>
             <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 10 }}>⚖️ 体重趋势</div>
             <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 70 }}>
               {wData.map((x, i) => {
@@ -682,7 +724,7 @@ function App() {
                   <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
                     <div style={{ fontSize: 8, color: "#7a6e62", marginBottom: 2 }}>{x.w}</div>
                     <div style={{ width: "80%", maxWidth: 18, height: h, borderRadius: 3,
-                      background: "linear-gradient(180deg, #3d7a4a, #5cb270)" }} />
+                      background: t.barGrad }} />
                     <div style={{ fontSize: 7, color: "#b0a594", marginTop: 2 }}>D{x.day}</div>
                   </div>
                 );
@@ -713,7 +755,7 @@ function App() {
 
       {/* Memo */}
       <div style={{ marginTop: 16, padding: "14px 18px", borderRadius: 16,
-        background: "linear-gradient(135deg, #2a2520, #3d3530)", color: "#fff" }}>
+        background: t.memoGrad, color: "#fff" }}>
         <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>📋 执行备忘</div>
         <div style={{ fontSize: 11, lineHeight: 2, color: "#cec5ba" }}>
           <div>💧 每天 2L+ 饮水</div>
@@ -733,6 +775,7 @@ function App() {
         力量优先 · 蛋白拉满 · 睡眠第一 · 步数不停
       </div>
 
+      </div>{/* end zIndex wrapper */}
       {/* Toast */}
       {toast && (
         <div style={{ position: "fixed", bottom: 80, left: "50%", transform: "translateX(-50%)",
@@ -745,18 +788,5 @@ function App() {
     </div>
   );
 }
-
 ReactDOM.createRoot(document.getElementById("app")).render(<App />);
-</script>
-<script>
-// Register Service Worker for PWA
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(r => console.log('SW registered:', r.scope))
-      .catch(e => console.log('SW failed:', e));
-  });
-}
-</script>
-</body>
-</html>
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("./sw.js").catch(()=>{})})}</script></body></html>
